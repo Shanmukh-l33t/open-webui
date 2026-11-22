@@ -28,6 +28,7 @@
 		visibleControls,
 		selectedFolder,
 		WEBUI_NAME,
+		activePagePath,
 		sidebarWidth
 	} from '$lib/stores';
 	import {
@@ -404,7 +405,7 @@
 		return null;
 	};
 
-	$: activeMenuItemId = getActiveMenuItemId($page.url.pathname);
+	$: activeMenuItemId = getActiveMenuItemId($activePagePath || $page.url.pathname);
 
 	const initPinnedMenuSortable = () => {
 		const el = document.getElementById('pinned-menu-items-list');

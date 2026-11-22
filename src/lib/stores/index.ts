@@ -60,6 +60,8 @@ export const TTSWorker = writable(null);
 
 export const chatId = writable('');
 export const chatTitle = writable('');
+// Page tabs mirror the selected page into the address bar without routing, so $page.url goes stale.
+export const activePagePath = writable('');
 
 type ChannelListItem = {
 	id: string;

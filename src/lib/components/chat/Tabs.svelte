@@ -45,6 +45,7 @@
 		showFileNavPath,
 		selectedTerminalId,
 		user,
+		activePagePath,
 		visibleControls
 	} from '$lib/stores';
 
@@ -1776,6 +1777,8 @@
 
 		return () => {
 			if (appLayout?.openPageTab === openPageTab) delete appLayout.openPageTab;
+			// Routes without tabs (admin) fall back to $page.url for the sidebar highlight.
+			activePagePath.set('');
 			unregisterCapture();
 			unsubscribeViews();
 			document.removeEventListener('keydown', handleWorkspaceShortcut, true);
@@ -1829,6 +1832,7 @@
 				// Reflect selection without routing through SvelteKit and remounting the workspace.
 				window.history.replaceState(window.history.state, '', url);
 			}
+			if (url.origin === location.origin) activePagePath.set(url.pathname);
 		}
 	}
 	$: mainChatGroupId =
