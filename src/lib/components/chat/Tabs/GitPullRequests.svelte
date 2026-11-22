@@ -208,18 +208,18 @@
 		loading = true;
 		error = '';
 		try {
+			const data = await request<PullRequest>('view', { number: String(pr.number) });
+			if (version !== generation) return;
+			selected = data;
 			if (tab === 'code') {
-				const data = await request<{ diff: string }>('diff', { number: String(pr.number) });
-				if (version === generation) diff = data.diff;
+				const result = await request<{ diff: string }>('diff', { number: String(pr.number) });
+				if (version === generation) diff = result.diff;
 			} else if (tab === 'checks') {
-				const data = await request<{ items: NonNullable<PullRequest['statusCheckRollup']> }>(
+				const result = await request<{ items: NonNullable<PullRequest['statusCheckRollup']> }>(
 					'checks',
 					{ number: String(pr.number) }
 				);
-				if (version === generation) selected = { ...pr, statusCheckRollup: data.items };
-			} else {
-				const data = await request<PullRequest>('view', { number: String(pr.number) });
-				if (version === generation) selected = data;
+				if (version === generation) selected = { ...data, statusCheckRollup: result.items };
 			}
 		} catch (reason) {
 			if (version === generation) error = String(reason instanceof Error ? reason.message : reason);
