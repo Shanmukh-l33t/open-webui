@@ -81,6 +81,18 @@ export const createTabsState = (): TabsState => ({
 });
 export const mainChatTabId = 'main-chat';
 
+/**
+ * The address to show for the active tab. Chat tabs share the main chat's address,
+ * so a reload does not open a lone chat tab as the main chat.
+ */
+export const activeTabHref = (tab: Tab | undefined, mainChatHref: string): string | undefined => {
+	if (tab?.kind === 'page') return tab.href;
+	if (tab?.kind !== 'chat') return undefined;
+	// A new chat has no page of its own; only then does the tab keep its address.
+	if (mainChatHref !== '/') return mainChatHref;
+	return tab.chatId ? `/c/${tab.chatId}` : tab.href;
+};
+
 /** Read layouts saved before all conversation tabs used kind: 'chat'. */
 export function normalizeChatTab(
 	tab: Omit<Tab, 'kind'> & {

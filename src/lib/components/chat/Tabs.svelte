@@ -25,7 +25,7 @@
 	import { beforeNavigate } from '$app/navigation';
 	import { WEBUI_NAME } from '$lib/stores';
 	import type Chat from './Chat.svelte';
-	import { pageTabKey } from './Tabs/tabs';
+	import { activeTabHref, pageTabKey } from './Tabs/tabs';
 	import Page from './Tabs/Page.svelte';
 	let pageViews: Record<string, Page> = {};
 	let pendingPageTab: { href: string; label: string } | null = null;
@@ -1807,16 +1807,7 @@
 	$: mainChatActive = fullWidth && visibleTabIds.has(mainChatTabId);
 	$: if (isMounted && viewReady && !chatLoading) {
 		const active = tabs.tabs.find((tab) => tab.id === tabs.activeId);
-		const href =
-			active?.kind === 'page'
-				? active.href
-				: active?.id === mainChatTabId
-					? mainChatHref
-					: active?.kind === 'chat'
-						? active.chatId
-							? `/c/${active.chatId}`
-							: active.href
-						: null;
+		const href = active?.id === mainChatTabId ? mainChatHref : activeTabHref(active, mainChatHref);
 		if (href) {
 			const url = new URL(href, location.origin);
 			if (active?.id === mainChatTabId && !isSavedChatId(chatId)) {
