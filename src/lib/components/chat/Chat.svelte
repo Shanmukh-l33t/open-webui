@@ -5560,6 +5560,8 @@
 		if (history.messages[message.id].done == true) {
 			const responseMessage = history.messages[message.id];
 			responseMessage.done = false;
+			// Continuing is a new attempt: hide the error left by the failed one.
+			responseMessage.error = null;
 			await tick();
 
 			const model = ($models ?? [])

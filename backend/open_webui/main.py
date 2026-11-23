@@ -1692,6 +1692,8 @@ async def chat_completion(
                     response_meta['task_id'] = task_id
                 message['meta'] = response_meta
                 message['done'] = False
+                # Continuing is a new attempt: drop the error of the failed one.
+                message['error'] = None
                 if agent_model:
                     message['modelName'] = agent_model['name']
 
